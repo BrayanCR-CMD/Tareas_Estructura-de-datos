@@ -1,14 +1,18 @@
-	public class Main {
-		public static void main(String[] args) {
-			int [] numeros = {1,2,3,4,5};
-			numeros[0] =85;
-			numeros[1] = 44;
-			numeros[2] = 31;
-			numeros[3] = 20;
-			numeros[4] = 91;
-			// escribir todos los numeros en el arreglo
-			for(int i = 0; i < numeros.length; i++) {
-				System.out.println(numeros[i]);
-			}
+import java.util.Scanner;
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int[] numeros = new int[6];
+		
+		//capturar los numeros denntro del arreglo
+		for (int i = 0; i < numeros.length; i++) {
+			System.out.println("ingrese un numero");
+			numeros[i] = sc.nextInt();
 		}
+		//mostrar los numeros dentro del arreglo
+		for (int i = 0; i < numeros.length; i++){
+			System.out.println("el numero en la posicion " + i + " es: " + numeros[i]);
+		}
+		
 	}
+}

@@ -8,9 +8,10 @@ int main(){
         cout << "ingresa un nombre:";
         cin >> nombres[i];
     }
-    //extraer datos del arreglo
+    //mostrar los datos del arreglo
     for (int i = 0; i < 5; i++){
         cout << nombres[i];
     }
     return 0;
+
 }

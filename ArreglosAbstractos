@@ -1,0 +1,34 @@
+import java.util.Scanner;
+
+//definicion de clase persona
+class Persona{
+String nombre;
+int edad;
+long telefono;
+}
+
+public class ArregloAbstracto {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		Persona[] personas = new Persona[3];
+
+		//arreglo de para llenar datos
+		for (int i=0; i<3; i++){
+			personas[i] = new Persona();
+			System.out.println("Ingrese su nombre: ");
+			personas[i].nombre = sc.nextLine();
+			System.out.println("Ingrese su edad: ");
+			personas[i].edad = sc.nextInt();
+			System.out.println("Ingrese su telefono: ");
+			personas[i].telefono = sc.nextLong();
+			sc.nextLine();
+		}
+		
+		//mostrar los datos
+		for (int i=0; i<3; i++){
+			System.out.println("Nombre: " + personas[i].nombre);
+			System.out.println("Edad: " + personas[i].edad);
+			System.out.println("Telefono: " + personas[i].telefono + "\n");
+		}
+	}
+}

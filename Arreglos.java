@@ -13,6 +13,6 @@ public class Arreglos {
 		for (int i = 0; i < numeros.length; i++){
 			System.out.println("el numero en la posicion " + i + " es: " + numeros[i]);
 		}
-		
+
 	}
 }

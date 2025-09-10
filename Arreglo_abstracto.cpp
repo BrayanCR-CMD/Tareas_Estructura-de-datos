@@ -20,7 +20,7 @@ int main()
         cin >> datos_persona[i].nombre;
         cout << "ingresa la edad" << endl;
         cin >> datos_persona[i].edad;
-        cout << "ingresa el nombre de telefono" << endl;
+        cout << "ingresa el numero de telefono" << endl;
         cin >> datos_persona[i].numero_telefono;
     }
 

@@ -1,6 +1,14 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
+class persona{
+    public:
+        string nombre;
+        int edad;
+        long numero_telefono;
+};
+
 int buscar_persona(persona datos_persona[], int n, string nombre_buscar) {
     for (int i = 0; i < n; i++) {
         if (datos_persona[i].nombre == nombre_buscar) {
@@ -10,19 +18,12 @@ int buscar_persona(persona datos_persona[], int n, string nombre_buscar) {
     return -1; // Retorna -1 si no se encuentra la persona
 }
 
-class persona{
-    public:
-        string nombre;
-        int edad;
-        long numero_telefono;
-};
-
 int main()
 {
     persona datos_persona [3];
-    int n = datos_persona.length();
+    int n = 3;
     string nombre_buscar;
-    int opcion;
+    int opcion = 1;
     //arreglo para capturar los datos de la persona
     for(int i =0; i<3; i++)
     {
@@ -41,7 +42,8 @@ int main()
         cout << "edad: " << datos_persona[i].edad << endl;
         cout << "numero de telefono: " << datos_persona[i].numero_telefono << endl;
     }
-    do while (opcion = 1){
+    //ciclo para buscar personas en el arreglo usando sus nombres
+    do {
         cout << "ingresa el nombre de la persona que deseas buscar" << endl;
         cin >> nombre_buscar;
         int indice = buscar_persona(datos_persona, n, nombre_buscar);
@@ -53,10 +55,10 @@ int main()
         } else {
             cout << "Persona no encontrada." << endl;
         }
-        cout << "deseas buscar otra persona? 1. si 2. no" << endl;
+        cout << "deseas buscar otra persona?" << '\n' << "1: si" << '\n' << "2: no" << endl;
         cin >> opcion;
 
-    }
+    } while (opcion == 1);
 
     return 0;
 }

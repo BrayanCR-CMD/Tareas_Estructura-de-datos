@@ -28,6 +28,7 @@ int main()
     int opcion = 0;
     persona insertar;
     int posicion;
+    int indice = buscar_persona(datos_persona, n, nombre_buscar);
 
     //arreglo para capturar los datos de la persona
     for(int i =0; i<3; i++)
@@ -48,16 +49,6 @@ int main()
         cout << "numero de telefono: " << datos_persona[i].numero_telefono << endl;
     }
 
-    switch (opcion) {
-        case 1:
-
-        break;
-
-        case 2:
-            
-        break;
-    }
-
     //ciclo para buscar personas en el arreglo usando sus nombres
     do {
         cout << "que accion desea realizar?" << '\n' << "1: buscar" << '\n' << "2: insertar" << '\n' << "3: apagar" << endl;
@@ -67,7 +58,6 @@ int main()
             case 1:
                 cout << "ingresa el nombre de la persona que deseas buscar" << endl;
                 cin >> nombre_buscar;
-                int indice = buscar_persona(datos_persona, n, nombre_buscar);
                 if (indice != -1) {
                     cout << "Persona encontrada en el índice: " << indice << endl;
                     cout << "Nombre: " << datos_persona[indice].nombre << endl;

@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+
+class insertar
+{
+    static void Main()
+    {
+        int opcion;
+        List<string> nombres = new List<string>(); // declaramos una lista que nos permite agregar indefinidamente elementos
+        do
+        {
+            Console.WriteLine("desea agregar algun nombre? \nsi:1 no:2");
+            opcion = int.Parse(Console.ReadLine());
+            Console.Clear();
+            if (opcion == 1)
+            {
+                Console.WriteLine("ingrese un nombre:");
+                nombres.Add(Console.ReadLine());
+                Console.Clear();
+            }
+            else if(opcion!=2)
+            {
+                Console.WriteLine("la opcion no es valida");
+            }
+            
+        } while (opcion != 2);
+        foreach(string nom in nombres){
+            Console.WriteLine(nom);
+        }
+        Console.WriteLine("apagando...");
+    }
+}

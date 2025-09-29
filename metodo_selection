@@ -1,0 +1,55 @@
+using System;
+class ord_insertion
+{
+    static void Main()
+    {
+        int[] numeros = new int[10];
+        int opcion;
+        for (int i = 0; i < numeros.Length; i++)
+        {
+            Console.WriteLine("ingresa un numero:");
+            numeros[i] = int.Parse(Console.ReadLine());
+            Console.Clear();
+        }
+        
+        Console.WriteLine("desea ordenar los numeros? \n1:si 2:no");
+        opcion = int.Parse(Console.ReadLine());
+        Console.Clear();
+
+        if (opcion == 1)
+        {
+            Console.WriteLine("los numeros sin ordenar son:");
+            for (int i = 0; i < numeros.Length; i++)
+            {
+                Console.WriteLine(numeros[i]);
+            }
+            ordenar(numeros);
+            Console.WriteLine("los numeros ordenados son:");
+            for (int i = 0; i < numeros.Length; i++)
+            {
+                Console.WriteLine(numeros[i]);
+            }
+        }
+
+    }
+    static void ordenar(int[] numeros)
+    {
+        for (int i = 0; i < numeros.Length - 1; i++)
+        {
+            int small = i;
+            for (int j = i + 1; j < numeros.Length; j++)
+            {
+                if (numeros[small]>numeros[j])
+                {
+                    small = j;
+                }
+            }
+            if (small != i)
+            {
+                int temp = numeros[i];
+                numeros[i] = numeros[small];
+                numeros[small] = temp;
+            }
+        }
+    }
+}

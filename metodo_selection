@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int n = 5;
+    int edad [5];
+    int temp;
+    bool ordenado;
+    //llenar el arreglo
+    for(int i = 0; i < n; i++){
+        cout << "ingresa la edad: ";
+        cin >> edad[i];
+    }
+    // metodo de ordenamiento selection
+    for (int i = 0; i < n - 1; i++){
+        int small = i;
+        for (int j = i + 1; j < n; j++){
+            if (edad[small] > edad[j]){
+                small = j;
+            }
+        }
+        // Intercambiar el elemento actual con el elemento mínimo encontrado
+        if (small != i){
+            temp = edad[i];
+            edad[i] = edad[small];
+            edad[small] = temp;
+        }
+    }
+    
+
+    //mostrar los datos del arreglo ordenado
+    for (int i = 0; i < n; i++){
+        cout << edad[i] << '\n';
+    }
+
+    return 0;
+}

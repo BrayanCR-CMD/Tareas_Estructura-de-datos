@@ -1,0 +1,39 @@
+using system;
+class ArregloAbs
+{
+    static void main()
+    {
+        persona[] datos = new persona[5];
+        capturar_d(datos);
+        mostrar_d();
+
+    }
+    class persona
+    {
+        string nombre;
+        int edad;
+        string numero_cel;
+
+    }
+    static void capturar_d(persona[] datos)
+    {
+        for (int i = 0; i < datos.length; i++)
+        {
+            console.writeline("ingrese su nombre");
+            console.readline(datos.nombre[i]);
+            console.writeline("ingrese su  edad");
+            console.readline(datos.edad[i]);
+            console.readline("ingrese su numero de telefono");
+            console.readline(datos.numero_cel[i]);
+            console.clear();
+        }
+    }
+    static void mostrar_d(persona[] datos) {
+        for (int i = 0; i < datos.length; i++)
+        {
+            console.writeline(datos.nombre[i]);
+            console.writeline("tiene " + datos.edad[i] + " años");
+            console.writeline("y su numero de celular es: " + datos.numero_cel);
+        }
+    }
+}

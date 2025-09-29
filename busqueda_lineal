@@ -1,0 +1,51 @@
+using System;
+class BusquedaLineal
+{
+    static void Main()
+    {
+        string[] nombres = new string[10];
+        int opcion;
+        
+        for (int i = 0; i < nombres.Length; i++)
+        {
+            Console.WriteLine("ingrese un nombre:");
+            nombres[i] = Console.ReadLine();
+        }
+        Console.Clear();
+        
+        Console.WriteLine("desea buscar algun nombre? \n1:si 2:no");
+        opcion = int.Parse(Console.ReadLine());
+        
+        while (opcion == 1)
+        {
+            Console.Clear();
+            int indice = busqueda(nombres);
+            if (indice == -1)
+            {
+                Console.WriteLine("no se encontro el nombre");
+            }
+            else
+            {
+                Console.WriteLine("el nombre '" + nombres[indice] + "' se encontro en la posicion: " + (indice + 1));
+            }
+            Console.WriteLine("desea buscar otro nombre? \n 1:si 2:no");
+            opcion = int.Parse(Console.ReadLine());
+        } 
+    }
+    // funcion que devuelve indice si se encuentra un nombre o -1 en caso que no
+    static int busqueda(string[] nombres)
+    {
+        string buscar;
+        Console.WriteLine("Ingrese el nombre que desea buscar:");
+        buscar = Console.ReadLine();
+
+        for (int i = 0; i < nombres.Length; i++)
+        {
+            if (buscar == nombres[i])
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+}

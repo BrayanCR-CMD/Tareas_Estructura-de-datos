@@ -1,0 +1,72 @@
+using System;
+class metodo_merge
+{
+    //metodo de ordenamiento merge
+    static void Merge(int[] array, int left, int mid, int right)
+    {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; i++)
+            L[i] = array[left + i];
+        for (int j = 0; j < n2; j++)
+            R[j] = array[mid + 1 + j];
+
+        int k = left;
+        int x = 0, y = 0;
+
+        while (x < n1 && y < n2)
+        {
+            if (L[x] <= R[y])
+            {
+                array[k] = L[x];
+                x++;
+            }
+            else
+            {
+                array[k] = R[y];
+                y++;
+            }
+            k++;
+        }
+
+        while (x < n1)
+        {
+            array[k] = L[x];
+            x++;
+            k++;
+        }
+
+        while (y < n2)
+        {
+            array[k] = R[y];
+            y++;
+            k++;
+        }
+    }
+
+    static void MergeSort(int[] array, int left, int right)
+    {
+        if (left < right)
+        {
+            int mid = left + (right - left) / 2;
+
+            MergeSort(array, left, mid);
+            MergeSort(array, mid + 1, right);
+
+            Merge(array, left, mid, right);
+        }
+    }
+    static void Main()
+    {
+        int[] array = { 38, 27, 43, 3, 9, 82, 10 };
+        Console.WriteLine("Array original: " + string.Join(", ", array));
+
+        MergeSort(array, 0, array.Length - 1);
+
+        Console.WriteLine("Array ordenado: " + string.Join(", ", array));
+    }
+}

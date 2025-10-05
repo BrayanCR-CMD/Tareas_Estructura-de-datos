@@ -15,10 +15,10 @@ public class RecorrerMatriz {
             }
         }
 
-        //mostrar los numeros dentro del arreglo
+        //mostrar los numeros dentro del arreglo por columnas
         for (int i = 0; i < filas; i++) {  
             for (int j = 0; j < columnas; j++) {
-                System.out.println("el numero en la posicion [" + i + "][" + j + "] es: " + matriz[i][j]);
+                System.out.println("el numero en la columna [" + (i+1) + "] es: " + matriz[j][i]);
             }
         }
     }

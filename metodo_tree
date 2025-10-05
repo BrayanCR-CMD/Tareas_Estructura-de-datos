@@ -1,0 +1,61 @@
+using System;
+
+class MetodoTree
+{
+    // Clase para los nodos del árbol
+    public class Nodo
+    {
+        public int Valor;
+        public Nodo Izquierda;
+        public Nodo Derecha;
+
+        public Nodo(int valor)
+        {
+            Valor = valor;
+            Izquierda = null;
+            Derecha = null;
+        }
+    }
+
+    // Recorrido inorden (izquierda, raíz, derecha)
+    public static void MostrarEnOrden(Nodo nodo)
+    {
+        if (nodo != null)
+        {
+            MostrarEnOrden(nodo.Izquierda);
+            Console.WriteLine(nodo.Valor);
+            MostrarEnOrden(nodo.Derecha);
+        }
+    }
+
+    // Recorrido preorden (raíz, izquierda, derecha) - muestra el árbol en el orden de inserción
+    public static void MostrarPreOrden(Nodo nodo)
+    {
+        if (nodo != null)
+        {
+            Console.WriteLine(nodo.Valor);
+            MostrarPreOrden(nodo.Izquierda);
+            MostrarPreOrden(nodo.Derecha);
+        }
+    }
+
+    public static void Main(string[] args)
+    {
+        // Crear el árbol binario de búsqueda
+        Nodo raiz = new Nodo(5);
+        raiz.Izquierda = new Nodo(3);
+        raiz.Derecha = new Nodo(8);
+        raiz.Izquierda.Izquierda = new Nodo(1);
+        raiz.Izquierda.Derecha = new Nodo(4);
+        raiz.Derecha.Izquierda = new Nodo(7);
+        raiz.Derecha.Derecha = new Nodo(9);
+
+        // Mostrar el árbol en preorden (desorden)
+        Console.WriteLine("Árbol en desorden (preorden):");
+        MostrarPreOrden(raiz);
+
+        // Mostrar el árbol en orden (ordenado)
+        Console.WriteLine("Árbol en orden (inorden):");
+        MostrarEnOrden(raiz);
+    }
+}

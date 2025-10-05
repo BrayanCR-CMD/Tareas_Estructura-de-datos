@@ -1,0 +1,93 @@
+using System;
+
+class examen1 {
+    static void Main()
+    {
+        //1. conteo pares/impares
+        int pares = 0;
+        int impares = 0;
+        int[] arreglo = new int[10];
+        arreglo = [1, 2, 3, 4, 5, 12, 4, 3, 10, 2];
+        for (int i = 0; i < arreglo.Length; i++)
+        {
+            if (arreglo[i] % 2 != 0)
+            {
+                Console.WriteLine("el nummero en la posicion " + (i+1) + " es impar");
+                impares = impares + 1;
+            }
+            else
+            {
+                Console.WriteLine("el nummero en la posicion " + (i+1) + " es par");
+                pares = pares + 1;
+            }
+
+        }
+        Console.WriteLine("pares:" + pares);
+        Console.WriteLine("impares:" + impares);
+        Console.ReadKey();
+        Console.Clear();
+
+        //2. suma columnas 3*3
+        int[,] suma = new int[3, 3];
+        int resultado = 0;
+        suma[0, 0] = 0;
+        suma[0, 1] = 2;
+        suma[0, 2] = 5;
+        suma[1, 0] = 7;
+        suma[1, 1] = 8;
+        suma[1, 2] = 4;
+        suma[2, 0] = 3;
+        suma[2, 1] = 6;
+        suma[2, 2] = 1;
+
+        for (int j = 0; j < 3; j++)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                resultado = resultado + suma[i, j];
+            }
+            Console.WriteLine("el resultado de la suma en la columna " + (j+1) + "es: " + resultado);
+            resultado = 0;
+        }
+        Console.ReadKey();
+        Console.Clear();
+        
+        //3. buscar 3*3*3
+        string[,,] matriz3d = new string[3, 3, 3];
+        string buscar;
+        bool encontrado = false;
+        matriz3d[0, 0, 0] = "jose";
+        matriz3d[0, 0, 1] = "mario";
+        matriz3d[0, 0, 2] = "adan";
+        matriz3d[1, 0, 0] = "enrique";
+        matriz3d[1, 1, 1] = "manuel";
+        matriz3d[1, 2, 2] = "maurice";
+        matriz3d[2, 0, 0] = "angel";
+        matriz3d[2, 1, 1] = "angie";
+        matriz3d[2, 2, 2] = "esteban";
+
+        Console.WriteLine("Ingrese el nombre que desea buscar:");
+        buscar = Console.ReadLine() ?? string.Empty;
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    if (buscar == matriz3d[i, j, k])
+                    {
+                        Console.WriteLine("nombre encontrado: " + matriz3d[i, j, k]);
+                        encontrado = true;
+                        break;
+                    }
+                }
+            }
+
+        }
+        if (!encontrado)
+        {
+        Console.WriteLine("nombre no encontrado");
+        }
+    }
+}

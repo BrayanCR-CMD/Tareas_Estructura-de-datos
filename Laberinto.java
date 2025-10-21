@@ -89,7 +89,7 @@ public class Laberinto {
                 case 'A': ny--; break;
                 case 'D': ny++; break;
                 default:
-                    System.out.println("Tecla inválida.");
+                    System.out.println("Tecla invalida.");
                     continue;
             }
 
@@ -133,7 +133,7 @@ public class Laberinto {
             } else if (destino == 'T') {
                 // trampa: perder vida, se revela (puede permanecer)
                 vidas--;
-                System.out.println("¡Has caído en una trampa! Vidas restantes: " + vidas);
+                System.out.println("¡Has caido en una trampa! Vidas restantes: " + vidas);
                 if (vidas <= 0) {
                     System.out.println("Has perdido todas tus vidas. Volviendo al nivel 1.");
                     nivel = 1;
@@ -154,7 +154,7 @@ public class Laberinto {
             }
 
             // si llegó aquí, se puede mover: actualizar mapa
-            laberinto[jugadorX][jugadorY] = ' '; // borrar anterior
+            laberinto[jugadorX][jugadorY] = ' '; // borrar posición anterior
             jugadorX = nx;
             jugadorY = ny;
             laberinto[jugadorX][jugadorY] = 'P';
@@ -173,7 +173,7 @@ public class Laberinto {
                 } else if (descubierto[i][j]) {
                     sb.append(laberinto[i][j]);
                 } else {
-                    sb.append('?'); // niebla de guerra
+                    sb.append('?'); // area no descubierta
                 }
             }
             System.out.println(sb.toString());

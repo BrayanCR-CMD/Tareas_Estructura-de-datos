@@ -1,0 +1,71 @@
+#lista doblemente enlazada
+class Nodo:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None
+        self.anterior = None
+
+class ListaDobleEnlazada:
+    def __init__(self):
+        self.cabeza = None
+        self.cola = None
+
+    def agregar_al_final(self, dato):
+        nuevo_nodo = Nodo(dato)
+        if not self.cabeza:
+            self.cabeza = nuevo_nodo
+            self.cola = nuevo_nodo
+        else:
+            nuevo_nodo.anterior = self.cola
+            self.cola.siguiente = nuevo_nodo
+            self.cola = nuevo_nodo
+
+    def agregar_al_inicio(self, dato):
+        nuevo_nodo = Nodo(dato)
+        if not self.cabeza:
+            self.cabeza = nuevo_nodo
+            self.cola = nuevo_nodo
+        else:
+            nuevo_nodo.siguiente = self.cabeza
+            self.cabeza.anterior = nuevo_nodo
+            self.cabeza = nuevo_nodo
+
+    def eliminar(self, dato):
+        actual = self.cabeza
+        while actual:
+            if actual.dato == dato:
+                if actual.anterior:
+                    actual.anterior.siguiente = actual.siguiente
+                else:
+                    self.cabeza = actual.siguiente
+                if actual.siguiente:
+                    actual.siguiente.anterior = actual.anterior
+                else:
+                    self.cola = actual.anterior
+                return
+            actual = actual.siguiente
+
+    def mostrar_desde_inicio(self):
+        actual = self.cabeza
+        while actual:
+            print(actual.dato, end=" <-> ")
+            actual = actual.siguiente
+        print("None")
+
+    def mostrar_desde_final(self):
+        actual = self.cola
+        while actual:
+            print(actual.dato, end=" <-> ")
+            actual = actual.anterior
+        print("None")
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    lista = ListaDobleEnlazada()
+    lista.agregar_al_final(10)
+    lista.agregar_al_final(20)
+    lista.agregar_al_inicio(5)
+    lista.mostrar_desde_inicio()  
+    lista.mostrar_desde_final()   
+    lista.eliminar(10)
+    lista.mostrar_desde_inicio()  

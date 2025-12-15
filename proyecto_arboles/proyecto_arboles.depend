@@ -1,0 +1,59 @@
+# depslib dependency file v1.0
+1765758990 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\nodo.cpp
+	"nodo.h"
+	<algorithm>
+
+1765758967 c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\nodo.h
+	<memory>
+	<vector>
+	<string>
+
+1765758981 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\interfaz_consola.cpp
+	"interfaz_consola.h"
+	<iostream>
+	<sstream>
+
+1765759005 c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\interfaz_consola.h
+	<string>
+	<vector>
+	"sistema_archivos.h"
+
+1765759013 c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\sistema_archivos.h
+	<memory>
+	<string>
+	<map>
+	"nodo.h"
+	"trie.h"
+	"papelera.h"
+
+1765758967 c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\trie.h
+	<memory>
+	<map>
+	<vector>
+	<string>
+
+1765758967 c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\papelera.h
+	<memory>
+	<vector>
+	<string>
+
+1765759776 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\sistema_archivos.cpp
+	"sistema_archivos.h"
+	<iostream>
+	<fstream>
+	<queue>
+	<algorithm>
+
+1765759018 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\trie.cpp
+	"trie.h"
+	<algorithm>
+	<cctype>
+
+1765759776 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\papelera.cpp
+	"papelera.h"
+	"nodo.h"
+	<iostream>
+
+1765759391 source:c:\users\braya\onedrive\documentos\tareas\consoleapp\proyecto_arboles\main.cpp
+	"interfaz_consola.h"
+

@@ -9,6 +9,7 @@
 #include <random>
 #include <chrono>
 #include <ctime>
+#include <stack>
 
 SistemaCompleto::SistemaCompleto() : siguienteID(1), operacionesRealizadas(0), modoPruebas(false) {
     inicioEjecucion = time(nullptr);
@@ -1401,3 +1402,4 @@ void SistemaCompleto::ejecutarDemo() {
     std::cout << "\n Demostración completada" << std::endl;
     std::cout << "Los archivos de demo se guardaron en 'demo_export.txt'" << std::endl;
 }
+

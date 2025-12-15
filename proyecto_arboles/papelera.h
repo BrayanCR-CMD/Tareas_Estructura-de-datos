@@ -1,31 +1,66 @@
 #ifndef PAPELERA_H_INCLUDED
 #define PAPELERA_H_INCLUDED
 
-// papelera.hpp
+// papelera
 
 #include <memory>
 #include <vector>
 #include <string>
+#include <ctime>
 
-// Declaraci�n anticipada para evitar dependencia circular
-class Nodo;
+// Declaración anticipada
+class NodoAvanzado;
 
-class Papelera {
+class PapeleraAvanzada {
 private:
     struct ElementoPapelera {
-        std::shared_ptr<Nodo> nodo;
-        std::shared_ptr<Nodo> padreOriginal;
+        std::shared_ptr<NodoAvanzado> nodo;
+        std::shared_ptr<NodoAvanzado> padreOriginal;
         int posicionOriginal;
+        time_t fechaEliminacion;
+        time_t fechaExpiracion;
+        std::string motivo;
+        int tamaño;
+        
+        ElementoPapelera(std::shared_ptr<NodoAvanzado> n, std::shared_ptr<NodoAvanzado> p, 
+                        int pos, const std::string& mot);
+        
+        bool estaExpirado() const;
+        double tiempoRestanteHoras() const;
     };
-
+    
     std::vector<ElementoPapelera> elementos;
-    static const int MAX_ELEMENTOS = 10;
-
+    size_t capacidadMaximaBytes;
+    size_t espacioUtilizado;
+    int maxElementos;
+    
+    // Métodos privados
+    bool liberarEspacio(size_t espacioNecesario);
+    void aplicarLimites();
+    void limpiarExpirados();
+    std::string formatoTamaño(size_t bytes);
+    std::string formatearFecha(time_t tiempo);
+    
 public:
-    void agregar(std::shared_ptr<Nodo> nodo, std::shared_ptr<Nodo> padre, int posicion);
-    void listar();
+    PapeleraAvanzada();
+    
+    // Configuración
+    void configurarLimites(size_t maxBytes, int maxElem);
+    
+    // Operaciones
+    bool agregar(std::shared_ptr<NodoAvanzado> nodo, std::shared_ptr<NodoAvanzado> padre, 
+                int posicion, const std::string& motivo = "");
+    void listarDetallado(bool mostrarExpirados = false);
     bool recuperar(int indice);
-    void vaciar();
+    int recuperarTodos();
+    bool vaciar(bool forzar = false);
+    
+    // Información
+    void mostrarEstadisticas();
+    
+    // Pruebas
+    void llenarConDatosAleatorios(int cantidad);
 };
 
 #endif // PAPELERA_H_INCLUDED
+

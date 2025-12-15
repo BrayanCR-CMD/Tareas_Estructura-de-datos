@@ -7,18 +7,27 @@
 #include <vector>
 #include "sistema_archivos.h"
 
-class InterfazConsola {
+class InterfazCompleta {
 private:
-    SistemaArchivos sistema;
+    SistemaCompleto sistema;
     bool ejecutando;
-
+    std::vector<std::string> historial;
+    
     void procesarComando(const std::string& comandoLinea);
-    std::vector<std::string> dividirComando(const std::string& comandoLinea);
-    void mostrarAyuda();
-
+    std::vector<std::string> parsearComando(const std::string& comandoLinea);
+    void mostrarBanner();
+    void mostrarAyudaInicial();
+    void mostrarPrompt();
+    void agregarAlHistorial(const std::string& comando);
+    void mostrarHistorial();
+    
 public:
-    InterfazConsola();
+    InterfazCompleta();
     void iniciar();
+    
+    // Comandos específicos
+    void ejecutarDemo();
 };
 
 #endif // INTERFAZ_CONSOLA_H_INCLUDED
+

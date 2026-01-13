@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Lluvia de Hamburguesas - Física Vectorial</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F7FF 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 8px solid #FF6347;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #FF4500;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #FFD700, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .simulation-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 1100px) {
+            .simulation-area {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section {
+            background: #FFF8DC;
+            padding: 25px;
+            border-radius: 15px;
+            border: 5px solid #FFA500;
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+        }
+        
+        .visualization-section {
+            background: #F0FFF0;
+            padding: 25px;
+            border-radius: 15px;
+            border: 5px solid #32CD32;
+            box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #8B4513;
+            font-size: 1.2em;
+        }
+        
+        input[type="number"], input[type="range"], select {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #FFA500;
+            border-radius: 10px;
+            font-size: 1.1em;
+            background-color: #FFF;
+        }
+        
+        .value-display {
+            display: inline-block;
+            margin-left: 15px;
+            font-weight: bold;
+            color: #FF4500;
+            font-size: 1.2em;
+            background: rgba(255, 69, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        button {
+            background: linear-gradient(180deg, #FF6347 0%, #FF4500 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            width: 100%;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 69, 0, 0.6);
+        }
+        
+        .results-section {
+            background: #E6F7FF;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 5px solid #1E90FF;
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.3);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid;
+        }
+        
+        .result-card.velocity {
+            border-color: #FF4500;
+        }
+        
+        .result-card.acceleration {
+            border-color: #32CD32;
+        }
+        
+        .result-card.time {
+            border-color: #1E90FF;
+        }
+        
+        .result-card.vector {
+            border-color: #9370DB;
+        }
+        
+        .result-card.energy {
+            border-color: #FFD700;
+        }
+        
+        .result-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+        
+        .result-unit {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .animation-container {
+            position: relative;
+            height: 350px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid #4682B4;
+            margin-bottom: 25px;
+        }
+        
+        #burger {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(180deg, #DAA520 0%, #B8860B 100%);
+            border-radius: 50% 50% 30% 30%;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: top 0.1s linear;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        #burger::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 15px;
+            background: #8B4513;
+            border-radius: 10px;
+            top: -5px;
+            left: -5px;
+        }
+        
+        #burger::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 15px;
+            background: #32CD32;
+            border-radius: 10px;
+            bottom: -5px;
+            left: -5px;
+        }
+        
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+        }
+        
+        .machine {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(180deg, #808080 0%, #A9A9A9 100%);
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 25px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-table th {
+            background: #4169E1;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .data-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .data-table tr:hover {
+            background: #f0f8ff;
+        }
+        
+        .vector-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #E6E6FA, #D8BFD8);
+            border-radius: 10px;
+            border-left: 4px solid #9370DB;
+        }
+        
+        .vector-arrow {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #FF4500;
+            margin-right: 10px;
+            transform: rotate(-90deg);
+        }
+        
+        .conversion-section {
+            background: #FFF0F5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border: 3px solid #FF69B4;
+        }
+        
+        .conversion-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .conversion-btn {
+            flex: 1;
+            padding: 10px;
+            background: #FF69B4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .conversion-btn:hover {
+            background: #FF1493;
+        }
+        
+        .vector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .vector-component {
+            background: #F0F8FF;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #4169E1;
+        }
+        
+        .magnitudes-info {
+            background: linear-gradient(135deg, #FFFACD, #FFE4B5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #FFD700;
+        }
+        
+        .unit-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .unit-btn {
+            flex: 1;
+            padding: 8px;
+            background: #87CEEB;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .unit-btn.active {
+            background: #4169E1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍔 Simulación Lluvia de Hamburguesas - Física Vectorial 🍔</h1>
+        
+        <div class="simulation-area">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="height">Altura de lanzamiento:</label>
+                    <input type="number" id="height" min="10" max="10000" step="10" value="1000">
+                    <span class="value-display" id="heightValue">1000 m</span>
+                    <input type="range" id="heightSlider" min="10" max="10000" step="10" value="1000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="weight">Peso de la hamburguesa:</label>
+                    <input type="number" id="weight" min="200" max="5000" step="50" value="500">
+                    <span class="value-display" id="weightValue">500 g</span>
+                    <input type="range" id="weightSlider" min="200" max="5000" step="50" value="500">
+                </div>
+                
+                <div class="conversion-section">
+                    <h4 style="color: #8B4513; margin-bottom: 10px;">Conversión de Unidades</h4>
+                    <div class="conversion-buttons">
+                        <button class="conversion-btn" id="convertMeters">Metros → Millas</button>
+                        <button class="conversion-btn" id="convertKmh">m/s → km/h</button>
+                        <button class="conversion-btn" id="convertGrams">Gramos → Libras</button>
+                    </div>
+                    <div id="conversionResult" style="margin-top: 10px; padding: 10px; background: white; border-radius: 5px; display: none;"></div>
+                </div>
+                
+                <div class="magnitudes-info">
+                    <h4 style="color: #8B4513; margin-bottom: 10px;">Magnitudes Físicas</h4>
+                    <p><strong>Masa:</strong> Medida en kilogramos (kg) - Cantidad de materia</p>
+                    <p><strong>Aceleración:</strong> m/s² - Cambio de velocidad por unidad de tiempo</p>
+                    <p><strong>Velocidad:</strong> m/s - Rapidez con dirección (vectorial)</p>
+                    <p><strong>Energía:</strong> Julios (J) - Capacidad para realizar trabajo</p>
+                </div>
+                
+                <button id="simulateBtn">Iniciar Simulación</button>
+                <button id="resetBtn" style="margin-top: 15px; background: linear-gradient(180deg, #808080 0%, #696969 100%);">Reiniciar Simulación</button>
+                
+                <div class="form-group" style="margin-top: 30px;">
+                    <h4 style="color: #8B4513; margin-bottom: 15px;">Conceptos de Vectores</h4>
+                    <p style="background: #F0F8FF; padding: 10px; border-radius: 8px; border-left: 4px solid #4169E1;">
+                        <strong>Vector Velocidad:</strong> Magnitud con dirección (hacia abajo)<br>
+                        <strong>Vector Aceleración:</strong> Gravedad (9.81 m/s² hacia abajo)<br>
+                        <strong>Componentes:</strong> En caída libre solo hay componente vertical<br>
+                        <strong>Magnitud Resultante:</strong> √(vx² + vy²)
+                    </p>
+                </div>
+            </div>
+            
+            <div class="visualization-section">
+                <h3 style="color: #2E8B57; text-align: center;">Animación de la Caída</h3>
+                <div class="animation-container">
+                    <div class="machine"></div>
+                    <div id="burger">🍔</div>
+                    <div class="ground"></div>
+                    <div id="speedIndicator" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold;">
+                        Velocidad: 0 m/s ↓
+                    </div>
+                    <div id="vectorIndicator" style="position: absolute; top: 50px; right: 10px; background: rgba(147, 112, 219, 0.8); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold;">
+                        Vector: 0 m/s ↓
+                    </div>
+                </div>
+                
+                <div class="vector-grid">
+                    <div class="vector-component">
+                        <h5>Componente Vertical</h5>
+                        <div class="result-value" id="verticalComponent">0.00</div>
+                        <div class="result-unit">m/s ↓</div>
+                    </div>
+                    <div class="vector-component">
+                        <h5>Componente Horizontal</h5>
+                        <div class="result-value" id="horizontalComponent">0.00</div>
+                        <div class="result-unit">m/s →</div>
+                    </div>
+                </div>
+                
+                <div class="vector-display">
+                    <div class="vector-arrow"></div>
+                    <div>
+                        <h4>Vector Velocidad Resultante</h4>
+                        <div class="result-value" id="resultantVector">0.00</div>
+                        <div class="result-unit">m/s</div>
+                        <small>Dirección: Vertical hacia abajo (-90°)</small>
+                    </div>
+                </div>
+                
+                <h3 style="color: #4169E1; text-align: center;">Gráfica de Velocidad vs Tiempo</h3>
+                <div class="unit-selector">
+                    <button class="unit-btn active" data-unit="m/s">m/s</button>
+                    <button class="unit-btn" data-unit="km/h">km/h</button>
+                    <button class="unit-btn" data-unit="ft/s">ft/s</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="velocityChart"></canvas>
+                </div>
+                
+                <h3 style="color: #4169E1; text-align: center;">Datos de la Simulación</h3>
+                <div class="data-table-container">
+                    <table class="data-table" id="velocityTable">
+                        <thead>
+                            <tr>
+                                <th>Tiempo (s)</th>
+                                <th>Velocidad (m/s)</th>
+                                <th>Vector (m/s, °)</th>
+                                <th>Energía (J)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="velocityTableBody">
+                            <!-- Los datos se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <h3 style="color: #1E90FF; text-align: center;">Resultados de la Simulación - Análisis Vectorial</h3>
+            <div class="results-grid">
+                <div class="result-card velocity">
+                    <h4>Velocidad Final</h4>
+                    <div class="result-value" id="finalVelocity">0.00</div>
+                    <div class="result-unit" id="velocityUnit">m/s</div>
+                    <p>Magnitud del vector velocidad</p>
+                    <small id="kmhVelocity">0.00 km/h</small>
+                </div>
+                
+                <div class="result-card acceleration">
+                    <h4>Aceleración</h4>
+                    <div class="result-value" id="finalAcceleration">9.81</div>
+                    <div class="result-unit">m/s² ↓</div>
+                    <p>Vector gravedad constante</p>
+                    <small>9.81 m/s² hacia el centro de la Tierra</small>
+                </div>
+                
+                <div class="result-card vector">
+                    <h4>Vector Resultante</h4>
+                    <div class="result-value" id="finalVector">0.00</div>
+                    <div class="result-unit">m/s ↓</div>
+                    <p>Magnitud y dirección</p>
+                    <small id="vectorAngle">Ángulo: -90°</small>
+                </div>
+                
+                <div class="result-card energy">
+                    <h4>Energía Cinética</h4>
+                    <div class="result-value" id="impactEnergy">0.00</div>
+                    <div class="result-unit">Julios (J)</div>
+                    <p>E = ½ × m × v²</p>
+                    <small id="energyComparison">Energía de impacto</small>
+                </div>
+                
+                <div class="result-card time">
+                    <h4>Tiempo de Caída</h4>
+                    <div class="result-value" id="fallTime">0.00</div>
+                    <div class="result-unit">segundos</div>
+                    <p>t = √(2h/g)</p>
+                    <small id="timeInfo">Para 1000m de altura</small>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; text-align: center;">
+                <h4 style="color: #8B4513;">Análisis Vectorial</h4>
+                <p id="behaviorSummary" style="background: #FFFACD; padding: 15px; border-radius: 10px; border-left: 5px solid #FFD700;">
+                    <strong>Movimiento en 1D (vertical):</strong> En caída libre solo hay componente vertical.<br>
+                    <strong>Vector velocidad:</strong> Dirección constante hacia abajo (-90°), magnitud variable.<br>
+                    <strong>Vector aceleración:</strong> Gravedad constante (9.81 m/s² ↓).<br>
+                    <strong>Magnitud resultante:</strong> Igual a la velocidad vertical (no hay componente horizontal).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class HamburguesaSimulation {
+            constructor() {
+                this.gravity = 9.81; // m/s²
+                this.altura = 1000; // metros
+                this.peso = 500; // gramos
+                this.tiempoCaida = 0;
+                this.velocidadFinal = 0;
+                this.intervalId = null;
+                this.velocityData = [];
+                this.timeLabels = [];
+                this.currentUnit = 'm/s';
+                
+                this.initializeElements();
+                this.initializeChart();
+                this.setupEventListeners();
+            }
+            
+            initializeElements() {
+                this.heightInput = document.getElementById('height');
+                this.heightSlider = document.getElementById('heightSlider');
+                this.heightValue = document.getElementById('heightValue');
+                
+                this.weightInput = document.getElementById('weight');
+                this.weightSlider = document.getElementById('weightSlider');
+                this.weightValue = document.getElementById('weightValue');
+                
+                this.simulateBtn = document.getElementById('simulateBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                
+                this.burger = document.getElementById('burger');
+                this.speedIndicator = document.getElementById('speedIndicator');
+                this.vectorIndicator = document.getElementById('vectorIndicator');
+                this.finalVelocity = document.getElementById('finalVelocity');
+                this.velocityUnit = document.getElementById('velocityUnit');
+                this.kmhVelocity = document.getElementById('kmhVelocity');
+                this.finalAcceleration = document.getElementById('finalAcceleration');
+                this.finalVector = document.getElementById('finalVector');
+                this.vectorAngle = document.getElementById('vectorAngle');
+                this.fallTime = document.getElementById('fallTime');
+                this.timeInfo = document.getElementById('timeInfo');
+                this.impactEnergy = document.getElementById('impactEnergy');
+                this.energyComparison = document.getElementById('energyComparison');
+                this.verticalComponent = document.getElementById('verticalComponent');
+                this.horizontalComponent = document.getElementById('horizontalComponent');
+                this.resultantVector = document.getElementById('resultantVector');
+                
+                this.velocityTableBody = document.getElementById('velocityTableBody');
+                this.behaviorSummary = document.getElementById('behaviorSummary');
+                this.conversionResult = document.getElementById('conversionResult');
+                
+                this.unitButtons = document.querySelectorAll('.unit-btn');
+                this.convertMetersBtn = document.getElementById('convertMeters');
+                this.convertKmhBtn = document.getElementById('convertKmh');
+                this.convertGramsBtn = document.getElementById('convertGrams');
+            }
+            
+            initializeChart() {
+                const ctx = document.getElementById('velocityChart').getContext('2d');
+                
+                // Destruir gráfica existente si hay
+                if (window.myChart) {
+                    window.myChart.destroy();
+                }
+                
+                this.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: this.timeLabels,
+                        datasets: [{
+                            label: 'Velocidad (m/s)',
+                            data: this.velocityData,
+                            borderColor: '#FF4500',
+                            backgroundColor: 'rgba(255, 69, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.1,
+                            pointBackgroundColor: '#FF6347',
+                            pointBorderColor: '#FFFFFF',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Velocidad (m/s)',
+                                    color: '#FF4500',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: { 
+                                    color: '#666',
+                                    font: { size: 12 },
+                                    callback: function(value) {
+                                        return value.toFixed(1) + ' m/s';
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Tiempo (segundos)',
+                                    color: '#4169E1',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                ticks: { 
+                                    color: '#666',
+                                    font: { size: 12 }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#333',
+                                    font: { size: 14, weight: 'bold' }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Velocidad: ${context.parsed.y.toFixed(2)} m/s`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Guardar referencia global para limpieza
+                window.myChart = this.chart;
+            }
+            
+            setupEventListeners() {
+                // Sincronizar controles de altura
+                this.heightInput.addEventListener('input', (e) => {
+                    const value = Math.min(10000, Math.max(10, parseInt(e.target.value) || 10));
+                    this.heightSlider.value = value;
+                    this.heightValue.textContent = `${value} m`;
+                    this.altura = value;
+                    this.timeInfo.textContent = `Para ${value}m de altura`;
+                });
+                
+                this.heightSlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    this.heightInput.value = value;
+                    this.heightValue.textContent = `${value} m`;
+                    this.altura = value;
+                    this.timeInfo.textContent = `Para ${value}m de altura`;
+                });
+                
+                // Sincronizar controles de peso
+                this.weightInput.addEventListener('input', (e) => {
+                    const value = Math.min(5000, Math.max(200, parseInt(e.target.value) || 200));
+                    this.weightSlider.value = value;
+                    this.weightValue.textContent = `${value} g`;
+                    this.peso = value / 1000;
+                });
+                
+                this.weightSlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    this.weightInput.value = value;
+                    this.weightValue.textContent = `${value} g`;
+                    this.peso = value / 1000;
+                });
+                
+                // Botones de simulación
+                this.simulateBtn.addEventListener('click', () => {
+                    this.startSimulation();
+                });
+                
+                this.resetBtn.addEventListener('click', () => {
+                    this.resetSimulation();
+                });
+                
+                // Botones de conversión de unidades
+                this.convertMetersBtn.addEventListener('click', () => {
+                    const meters = this.altura;
+                    const miles = meters * 0.000621371;
+                    this.showConversionResult(`${meters} metros = ${miles.toFixed(4)} millas`);
+                });
+                
+                this.convertKmhBtn.addEventListener('click', () => {
+                    const mps = this.velocidadFinal || 0;
+                    const kmh = mps * 3.6;
+                    this.showConversionResult(`${mps.toFixed(2)} m/s = ${kmh.toFixed(2)} km/h`);
+                });
+                
+                this.convertGramsBtn.addEventListener('click', () => {
+                    const grams = this.peso * 1000;
+                    const pounds = grams * 0.00220462;
+                    this.showConversionResult(`${grams} gramos = ${pounds.toFixed(4)} libras`);
+                });
+                
+                // Botones de unidades de gráfica
+                this.unitButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.unitButtons.forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentUnit = e.target.dataset.unit;
+                        this.updateChartUnits();
+                    });
+                });
+                
+                // Inicializar valores
+                this.peso = this.weightInput.value / 1000;
+                this.timeInfo.textContent = `Para ${this.altura}m de altura`;
+            }
+            
+            calculateFallTime() {
+                // t = √(2h/g)
+                return Math.sqrt((2 * this.altura) / this.gravity);
+            }
+            
+            calculateFinalVelocity() {
+                // v = √(2gh)
+                return Math.sqrt(2 * this.gravity * this.altura);
+            }
+            
+            calculateVelocityAtTime(t) {
+                // v = g * t
+                return this.gravity * t;
+            }
+            
+            calculateVectorMagnitude(vx, vy) {
+                // |v| = √(vx² + vy²)
+                return Math.sqrt(vx * vx + vy * vy);
+            }
+            
+            calculateVectorAngle(vx, vy) {
+                // θ = atan2(vy, vx)
+                return Math.atan2(vy, vx) * (180 / Math.PI);
+            }
+            
+            updateChartUnits() {
+                if (!this.chart) return;
+                
+                let label = 'Velocidad';
+                let data = [...this.velocityData];
+                
+                switch(this.currentUnit) {
+                    case 'm/s':
+                        label = 'Velocidad (m/s)';
+                        break;
+                    case 'km/h':
+                        label = 'Velocidad (km/h)';
+                        data = data.map(v => v * 3.6);
+                        break;
+                    case 'ft/s':
+                        label = 'Velocidad (ft/s)';
+                        data = data.map(v => v * 3.28084);
+                        break;
+                }
+                
+                this.chart.data.datasets[0].data = data;
+                this.chart.data.datasets[0].label = label;
+                this.chart.update();
+            }
+            
+            updateChart(time, velocity) {
+                this.timeLabels.push(time.toFixed(1));
+                this.velocityData.push(velocity);
+                
+                // Actualizar gráfica
+                this.chart.data.labels = this.timeLabels;
+                this.chart.data.datasets[0].data = this.velocityData;
+                this.chart.update();
+            }
+            
+            updateTable(time, velocity, vectorMagnitude, vectorAngle, energy) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${time.toFixed(2)}</td>
+                    <td><strong>${velocity.toFixed(2)} m/s</strong></td>
+                    <td>${vectorMagnitude.toFixed(2)} m/s, ${vectorAngle.toFixed(1)}°</td>
+                    <td>${energy.toFixed(2)} J</td>
+                `;
+                this.velocityTableBody.appendChild(row);
+            }
+            
+            startSimulation() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                }
+                
+                // Resetear datos
+                this.velocityData = [];
+                this.timeLabels = [];
+                this.velocityTableBody.innerHTML = '';
+                
+                // Calcular valores teóricos
+                this.tiempoCaida = this.calculateFallTime();
+                this.velocidadFinal = this.calculateFinalVelocity();
+                
+                // Actualizar resultados iniciales
+                this.updateResults();
+                
+                // Configurar animación
+                const startTime = Date.now();
+                const animationDuration = Math.min(this.tiempoCaida * 1000, 5000);
+                const scaleFactor = animationDuration / (this.tiempoCaida * 1000);
+                const containerHeight = 350 - 50;
+                const initialTop = 20;
+                
+                let elapsedSeconds = 0;
+                let lastUpdateSecond = -1;
+                
+                // Calcular y mostrar datos iniciales (t=0)
+                const initialVelocity = this.calculateVelocityAtTime(0);
+                const initialEnergy = 0.5 * this.peso * Math.pow(initialVelocity, 2);
+                const initialVectorMagnitude = this.calculateVectorMagnitude(0, 0);
+                const initialVectorAngle = this.calculateVectorAngle(0, 0);
+                
+                this.updateChart(0, initialVelocity);
+                this.updateTable(0, initialVelocity, initialVectorMagnitude, initialVectorAngle, initialEnergy);
+                
+                this.intervalId = setInterval(() => {
+                    const currentTime = Date.now();
+                    const elapsedTime = (currentTime - startTime) / 1000;
+                    const scaledTime = elapsedTime / scaleFactor;
+                    
+                    if (scaledTime >= this.tiempoCaida || elapsedTime * 1000 >= animationDuration) {
+                        // Fin de la simulación
+                        clearInterval(this.intervalId);
+                        this.burger.style.top = `${containerHeight - 40}px`;
+                        
+                        // Mostrar velocidad final
+                        this.speedIndicator.textContent = `Velocidad: ${this.velocidadFinal.toFixed(2)} m/s ↓`;
+                        this.vectorIndicator.textContent = `Vector: ${this.velocidadFinal.toFixed(2)} m/s ↓`;
+                        
+                        // Añadir efecto de impacto
+                        this.burger.style.transform = `translateX(-50%) scale(0.9)`;
+                        setTimeout(() => {
+                            this.burger.style.transform = `translateX(-50%) scale(1)`;
+                        }, 100);
+                        
+                        // Actualizar gráfica y tabla con el último punto
+                        const finalEnergy = 0.5 * this.peso * Math.pow(this.velocidadFinal, 2);
+                        const finalVectorMagnitude = this.calculateVectorMagnitude(0, -this.velocidadFinal);
+                        const finalVectorAngle = this.calculateVectorAngle(0, -this.velocidadFinal);
+                        
+                        this.updateChart(this.tiempoCaida, this.velocidadFinal);
+                        this.updateTable(this.tiempoCaida, this.velocidadFinal, finalVectorMagnitude, finalVectorAngle, finalEnergy);
+                        
+                        // Actualizar componentes vectoriales finales
+                        this.verticalComponent.textContent = this.velocidadFinal.toFixed(2);
+                        this.resultantVector.textContent = this.velocidadFinal.toFixed(2);
+                        this.finalVector.textContent = this.velocidadFinal.toFixed(2);
+                        
+                        // Mostrar mensaje de impacto
+                        this.showImpactMessage();
+                        
+                        // Actualizar resumen
+                        this.behaviorSummary.innerHTML = `
+                            <strong>Análisis Vectorial Final:</strong><br>
+                            • <strong>Magnitud del vector velocidad:</strong> ${this.velocidadFinal.toFixed(2)} m/s<br>
+                            • <strong>Dirección:</strong> Vertical hacia abajo (-90°)<br>
+                            • <strong>Componente vertical:</strong> ${this.velocidadFinal.toFixed(2)} m/s ↓<br>
+                            • <strong>Componente horizontal:</strong> 0 m/s → (movimiento en 1D)<br>
+                            • <strong>Energía cinética final:</strong> ${(0.5 * this.peso * Math.pow(this.velocidadFinal, 2)).toFixed(2)} J<br>
+                            • <strong>Tiempo total:</strong> ${this.tiempoCaida.toFixed(2)} segundos
+                        `;
+                        return;
+                    }
+                    
+                    // Calcular posición actual: h = 0.5 * g * t²
+                    const distanciaRecorrida = 0.5 * this.gravity * Math.pow(scaledTime, 2);
+                    const currentPosition = Math.min(distanciaRecorrida, this.altura);
+                    
+                    // Calcular velocidad actual: v = g * t
+                    const currentVelocity = this.calculateVelocityAtTime(scaledTime);
+                    
+                    // Calcular componentes vectoriales
+                    const vx = 0; // No hay movimiento horizontal en caída libre
+                    const vy = -currentVelocity; // Negativo porque va hacia abajo
+                    const vectorMagnitude = this.calculateVectorMagnitude(vx, vy);
+                    const vectorAngle = this.calculateVectorAngle(vx, vy);
+                    const currentEnergy = 0.5 * this.peso * Math.pow(currentVelocity, 2);
+                    
+                    // Actualizar posición de la hamburguesa
+                    const percentage = currentPosition / this.altura;
+                    const newTop = initialTop + (percentage * containerHeight);
+                    this.burger.style.top = `${newTop}px`;
+                    
+                    // Actualizar indicadores en tiempo real
+                    this.speedIndicator.textContent = `Velocidad: ${currentVelocity.toFixed(2)} m/s ↓`;
+                    this.vectorIndicator.textContent = `Vector: ${vectorMagnitude.toFixed(2)} m/s, ${vectorAngle.toFixed(1)}°`;
+                    
+                    // Actualizar componentes vectoriales
+                    this.verticalComponent.textContent = currentVelocity.toFixed(2);
+                    this.resultantVector.textContent = vectorMagnitude.toFixed(2);
+                    
+                    // Actualizar gráfica y tabla cada segundo
+                    const currentSecond = Math.floor(scaledTime);
+                    if (currentSecond > lastUpdateSecond) {
+                        lastUpdateSecond = currentSecond;
+                        const secondVelocity = this.calculateVelocityAtTime(currentSecond);
+                        const secondEnergy = 0.5 * this.peso * Math.pow(secondVelocity, 2);
+                        const secondVectorMagnitude = this.calculateVectorMagnitude(0, -secondVelocity);
+                        const secondVectorAngle = this.calculateVectorAngle(0, -secondVelocity);
+                        
+                        this.updateChart(currentSecond, secondVelocity);
+                        this.updateTable(currentSecond, secondVelocity, secondVectorMagnitude, secondVectorAngle, secondEnergy);
+                    }
+                    
+                }, 16); // ~60 FPS
+            }
+            
+            updateResults() {
+                this.finalVelocity.textContent = this.velocidadFinal.toFixed(2);
+                this.kmhVelocity.textContent = (this.velocidadFinal * 3.6).toFixed(2) + ' km/h';
+                this.fallTime.textContent = this.tiempoCaida.toFixed(2);
+                this.finalAcceleration.textContent = this.gravity.toFixed(2);
+                this.finalVector.textContent = this.velocidadFinal.toFixed(2);
+                this.vectorAngle.textContent = `Ángulo: -90°`;
+                
+                const energy = 0.5 * this.peso * Math.pow(this.velocidadFinal, 2);
+                this.impactEnergy.textContent = energy.toFixed(2);
+                
+                // Actualizar unidades según selección
+                this.updateChartUnits();
+            }
+            
+            showConversionResult(message) {
+                this.conversionResult.textContent = message;
+                this.conversionResult.style.display = 'block';
+                
+                setTimeout(() => {
+                    this.conversionResult.style.display = 'none';
+                }, 3000);
+            }
+            
+            showImpactMessage() {
+                const impactEnergy = (0.5 * this.peso * Math.pow(this.velocidadFinal, 2)).toFixed(2);
+                const kmh = (this.velocidadFinal * 3.6).toFixed(2);
+                const mph = (this.velocidadFinal * 2.23694).toFixed(2);
+                
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #9370DB, #8A2BE2);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 20px rgba(147, 112, 219, 0.5);
+                    z-index: 1000;
+                    font-weight: bold;
+                    animation: slideIn 0.5s ease-out;
+                    max-width: 350px;
+                    text-align: center;
+                `;
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                notification.innerHTML = `
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">🍔💥 ¡IMPACTO VECTORIAL! 💥🍔</div>
+                    <div><strong>Vector Velocidad:</strong> ${this.velocidadFinal.toFixed(2)} m/s ↓</div>
+                    <div>(${kmh} km/h / ${mph} mph)</div>
+                    <div><strong>Magnitud:</strong> ${this.velocidadFinal.toFixed(2)} m/s</div>
+                    <div><strong>Dirección:</strong> -90° (vertical hacia abajo)</div>
+                    <div><strong>Energía:</strong> ${impactEnergy} J</div>
+                    <div><strong>Tiempo:</strong> ${this.tiempoCaida.toFixed(2)} s</div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.5s ease-in forwards';
+                    setTimeout(() => notification.remove(), 500);
+                }, 5000);
+            }
+            
+            resetSimulation() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                }
+                
+                // Resetear hamburguesa a posición inicial
+                this.burger.style.top = '20px';
+                this.burger.style.transform = 'translateX(-50%)';
+                this.speedIndicator.textContent = 'Velocidad: 0 m/s ↓';
+                this.vectorIndicator.textContent = 'Vector: 0 m/s ↓';
+                
+                // Resetear componentes vectoriales
+                this.verticalComponent.textContent = '0.00';
+                this.horizontalComponent.textContent = '0.00';
+                this.resultantVector.textContent = '0.00';
+                
+                // Resetear resultados
+                this.finalVelocity.textContent = '0.00';
+                this.kmhVelocity.textContent = '0.00 km/h';
+                this.fallTime.textContent = '0.00';
+                this.finalVector.textContent = '0.00';
+                this.vectorAngle.textContent = 'Ángulo: -90°';
+                this.impactEnergy.textContent = '0.00';
+                
+                // Resetear datos
+                this.velocityData = [];
+                this.timeLabels = [];
+                this.velocityTableBody.innerHTML = '';
+                
+                // Reinicializar gráfica
+                this.initializeChart();
+                
+                // Resetear resumen
+                this.behaviorSummary.innerHTML = `
+                    <strong>Movimiento en 1D (vertical):</strong> En caída libre solo hay componente vertical.<br>
+                    <strong>Vector velocidad:</strong> Dirección constante hacia abajo (-90°), magnitud variable.<br>
+                    <strong>Vector aceleración:</strong> Gravedad constante (9.81 m/s² ↓).<br>
+                    <strong>Magnitud resultante:</strong> Igual a la velocidad vertical (no hay componente horizontal).
+                `;
+                
+                // Eliminar notificaciones de impacto
+                document.querySelectorAll('[style*="position: fixed"]').forEach(n => n.remove());
+            }
+        }
+
+        // Inicializar simulación cuando se cargue la página
+        document.addEventListener('DOMContentLoaded', () => {
+            new HamburguesaSimulation();
+        });
+    </script>
+</body>
+</html>
